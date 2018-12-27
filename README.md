@@ -6,6 +6,8 @@ Terminal Chatter
 This project is designed to be a means for personal improvement
 in learning about different aspects of C programming and sockets. The Chatter  currently has the ability to chat over the web with access to profiles, usernames, passwords, and chat history.
 
+In the Draft Folder:  
+
 ### Server
 When running the server code, the folder in which it is being run should be considered as the server database. Files such as the list of profiles, chat histories, etc. will be added to that folder.
 
