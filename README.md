@@ -18,13 +18,13 @@ When a regular message is being sent, the initial information being sent is `(us
 
 ### Future Steps
 This is a slow growing project (developed in my free time) but has a few short term goals to build in subjects which I find interesting into the program
-    1. Groups Chats
-    2. Hashing Profiles on Server
-    3. GUI
-    4. Server Security
-    5. Encrypted Messaging
+    1. Groups Chats 
+    2. Hashing Profiles on Server 
+    3. GUI 
+    4. Server Security 
+    5. Encrypted Messaging 
     6. Direct Socket connection  
-    7. Concurrency
+    7. Concurrency 
 
 ### Security Issues
     1. Overloading call stack with /message command
