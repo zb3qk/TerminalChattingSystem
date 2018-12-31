@@ -7,10 +7,8 @@
 #include <netinet/in.h>
 #include <poll.h>
 #include <stdio.h>
+#include "objects .h"
 
-void profile() {
-
-}
 
 int main(int argc, const char *argv[]){
 //check input for server or client call
@@ -53,8 +51,11 @@ if(!argv[1]){ //run server
 
     // get a connection socket (this call will wait for one to connect)
     s = accept(listener, (struct sockaddr*)NULL, NULL); //returns the file descriptor
+    read(s,buffer1, sizeof(buffer1)); //reads data from socket (ID value or creation id)
+    //TODO: Protection from empty ID value
+
     //write(s, msg, strlen(msg)); // send a full message
-    close(listener);
+    //close(listener);
 }
 
 else if(argv[1] && argv[2]){ //run client
@@ -94,6 +95,8 @@ char buffer2[4096];
         int ret;
         int i;
 	memset(buffer1, 0, sizeof(buffer1));
+	FILE *ChatHistory = fopen("textHistory.txt","a+");
+	int ChatHistoryFD = fileno(ChatHistory);
 
 
 	//if(!connection) return 1; //if there is no connection to be had, then there is no chat
@@ -108,16 +111,22 @@ char buffer2[4096];
               ret = poll(fds, 2, timeout_msecs);
               if (ret > 0) {
                   /* An event on one of the fds has occurred. */
-                      if (fds[0].revents & POLLIN) { //for standard input
-		      char *message = fgets(buffer1,4096,stdin);
+                      if (fds[0].revents & POLLIN) { //for standard input (Sending)
+		      				    char *message = fgets(buffer1,4096,stdin);
                       write(s, user, strlen(user)); // sends username
-		      write(s, message, strlen(message)); // send a full message
-                      memset(buffer1, 0, sizeof(buffer1));
-		      }
-                      if (fds[1].revents & POLLIN) { //for socket
-		      read(s,buffer1, sizeof(buffer1)); //reads data from socket
-		      write(1,buffer1, sizeof(buffer1));//writes to the command line
-		      memset(buffer1, 0, sizeof(buffer1));
+		      						write(s, message, strlen(message)); // send a full message
+
+											write(ChatHistoryFD, user, strlen(user)); // sends username
+		      						write(ChatHistoryFD, message, strlen(message)); // send a full message
+
+										  memset(buffer1, 0, sizeof(buffer1));
+		      					  }
+                      if (fds[1].revents & POLLIN) { //for socket (Recieving)
+		      					  read(s,buffer1, sizeof(buffer1)); //reads data from socket
+
+		      					  write(1,buffer1, sizeof(buffer1));//writes to the command line
+										  fprintf(ChatHistory, "%s", buffer1);
+		      					  memset(buffer1, 0, sizeof(buffer1));
                       /* Data may be written on device number i. */
                       }
                }
@@ -140,7 +149,7 @@ for(;;){
 }
 */ //Extraneous Code
 return 0;
-	//close(s);
+	close(listener);
 
 
 }
